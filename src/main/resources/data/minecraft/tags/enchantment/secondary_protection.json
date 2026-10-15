@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "fire_protection",
+    "projectile_protection",
+    "feather_falling",
+    "blast_protection"
+  ]
+}

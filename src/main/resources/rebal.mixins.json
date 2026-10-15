@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "net.ona.rebal.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AnvilCostMixin",
+    "EnchantmentMixin",
+    "ItemStackMixin",
+    "RegistryDataLoaderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

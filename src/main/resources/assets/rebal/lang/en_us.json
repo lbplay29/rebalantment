@@ -1,0 +1,12 @@
+{
+  "enchantment.rebal.extra_hit": "Extra Hit",
+  "rebal.configuration.unbreakable_items": "Unbreakable Items",
+  "enchantment.rebal.extra_hit.desc": "Hits your opponent one second after the initial hit.",
+  "rebal.configuration.enchantment_level": "Enchantment Level",
+  "enchantment.minecraft.mending.desc": "Restores some of your health after a critical hit.",
+  "enchantment.minecraft.unbreaking.desc": "Speeds up how fast you can hit at full power.",
+  "enchantment.minecraft.mending": "Leech",
+  "enchantment.minecraft.unbreaking": "Quickslash",
+  "rebal.configuration.remove_levels": "Remove Levels",
+  "rebal.configuration.durability_multiplier": "Durability Multiplier"
+}
