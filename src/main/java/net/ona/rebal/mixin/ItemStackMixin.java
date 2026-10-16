@@ -3,6 +3,7 @@ package net.ona.rebal.mixin;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.ona.rebal.Config;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,6 +26,34 @@ public abstract class ItemStackMixin {
         if (hasUnbreaking) {
             cir.setReturnValue(0);
         }
+    }
+
+    @Inject(method = "getBarWidth", at = @At("RETURN"), cancellable = true)
+    private void rebal$barWidth(CallbackInfoReturnable<Integer> cir) {
+        ItemStack stack = (ItemStack) (Object) this;
+        if (!stack.isDamageableItem()) {
+            return;
+        }
+        int max = stack.getMaxDamage();
+        if (max <= 0) {
+            return;
+        }
+        float remaining = Math.max(0.0F, (float) (max - stack.getDamageValue()) / max);
+        cir.setReturnValue(Mth.clamp(Math.round(13.0F * remaining), 0, 13));
+    }
+
+    @Inject(method = "getBarColor", at = @At("RETURN"), cancellable = true)
+    private void rebal$barColor(CallbackInfoReturnable<Integer> cir) {
+        ItemStack stack = (ItemStack) (Object) this;
+        if (!stack.isDamageableItem()) {
+            return;
+        }
+        int max = stack.getMaxDamage();
+        if (max <= 0) {
+            return;
+        }
+        float remaining = Mth.clamp((float) (max - stack.getDamageValue()) / max, 0.0F, 1.0F);
+        cir.setReturnValue(Mth.hsvToRgb(remaining / 3.0F, 1.0F, 1.0F));
     }
 
     @Inject(method = "getMaxDamage",at = @At("RETURN"), cancellable = true)

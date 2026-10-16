@@ -5,6 +5,7 @@
   "mixins": [
     "AnvilCostMixin",
     "EnchantmentMixin",
+    "ItemEnchantmentsTooltipMixin",
     "ItemStackMixin",
     "RegistryDataLoaderMixin"
   ],

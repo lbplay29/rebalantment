@@ -1,6 +1,7 @@
 package net.ona.rebal;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -13,11 +14,18 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.enchanting.GetEnchantmentLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
+import java.util.ArrayList;
 
 @EventBusSubscriber
 public class CommonEvents {
@@ -67,6 +75,31 @@ public class CommonEvents {
                     .getEnchantmentLevel(world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse("minecraft:mending"))))));
             if (world instanceof ServerLevel _level)
                 _level.sendParticles(ParticleTypes.HEART, x, y, z, 25, 1, 1, 1, 0.1);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onGetEnchantmentLevel(GetEnchantmentLevelEvent event) {
+        if (!Config.SPEC.isLoaded()) {
+            return;
+        }
+        int setting = Config.ENCHLVL.get().intValue();
+        if (setting == 0 && !Config.REMOVELVL.get()) {
+            return;
+        }
+        ItemEnchantments.Mutable enchantments = event.getEnchantments();
+        // Copy the keys so we aren't modifying a collection
+        // while iterating over it.
+        for (Holder<Enchantment> enchantment : new ArrayList<>(enchantments.keySet())) {
+            int storedLevel = enchantments.getLevel(enchantment);
+            if (storedLevel <= 0) {
+                continue;
+            }
+            if (event.getTargetEnchant() != null
+                    && !event.getTargetEnchant().equals(enchantment)) {
+                continue;
+            }
+            enchantments.set(enchantment, enchantment.value().getMaxLevel());
         }
     }
 }

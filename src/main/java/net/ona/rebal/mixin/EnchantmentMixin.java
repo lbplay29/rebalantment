@@ -33,17 +33,11 @@ public abstract class EnchantmentMixin {
         return original;
     }
 
-    @Redirect(
-        method = "getFullname",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/chat/MutableComponent;append(Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/MutableComponent;"
-        )
-    )
+    @Redirect(method = "getFullname", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/MutableComponent;append(Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/MutableComponent;"))
     private static MutableComponent balancement$removeLevelAppend(MutableComponent self, Component other) {
-        if (!Config.REMOVELVL.get()) {
+        //if (!Config.REMOVELVL.get()) {
             self.append(other);
-        }
+        //}
         return self;
     }
 }
