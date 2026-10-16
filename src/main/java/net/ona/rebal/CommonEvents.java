@@ -84,7 +84,7 @@ public class CommonEvents {
             return;
         }
         int setting = Config.ENCHLVL.get().intValue();
-        if (setting == 0 && !Config.REMOVELVL.get()) {
+        if (setting == 0 || !Config.REMOVELVL.get()) {
             return;
         }
         ItemEnchantments.Mutable enchantments = event.getEnchantments();
@@ -95,8 +95,7 @@ public class CommonEvents {
             if (storedLevel <= 0) {
                 continue;
             }
-            if (event.getTargetEnchant() != null
-                    && !event.getTargetEnchant().equals(enchantment)) {
+            if (event.getTargetEnchant() != null && !event.getTargetEnchant().equals(enchantment)) {
                 continue;
             }
             enchantments.set(enchantment, enchantment.value().getMaxLevel());

@@ -18,6 +18,8 @@ public abstract class ItemEnchantmentsTooltipMixin {
         Holder<Enchantment> enchantment = args.get(0);
         int storedLevel = args.get(1);
         int effectiveLevel = EnchantmentLevelRules.getEffectiveLevel(enchantment, storedLevel);
-        args.set(1, effectiveLevel);
+        if (storedLevel>effectiveLevel) {
+            args.set(1, effectiveLevel);
+        }
     }
 }
