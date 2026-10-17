@@ -71,10 +71,12 @@ public class CommonEvents {
         double z = entity.getZ();
         if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY)
                 .getEnchantmentLevel(world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse("minecraft:mending")))) != 0) {
-            sourceentity.setHealth(sourceentity.getHealth()+(amount * (sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY)
-                    .getEnchantmentLevel(world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse("minecraft:mending"))))));
-            if (world instanceof ServerLevel _level)
-                _level.sendParticles(ParticleTypes.HEART, x, y, z, 25, 1, 1, 1, 0.1);
+            if (event.isCriticalHit()) {
+                sourceentity.setHealth(sourceentity.getHealth() + (amount * (sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY)
+                        .getEnchantmentLevel(world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse("minecraft:mending"))))));
+                if (world instanceof ServerLevel _level)
+                    _level.sendParticles(ParticleTypes.HEART, x, y, z, 9, 1, 1, 1, 0.1);
+            }
         }
     }
 
@@ -84,7 +86,7 @@ public class CommonEvents {
             return;
         }
         int setting = Config.ENCHLVL.get().intValue();
-        if (setting == 0 || !Config.REMOVELVL.get()) {
+        if (setting == 0 && !Config.REMOVELVL.get()) {
             return;
         }
         ItemEnchantments.Mutable enchantments = event.getEnchantments();
@@ -92,13 +94,12 @@ public class CommonEvents {
         // while iterating over it.
         for (Holder<Enchantment> enchantment : new ArrayList<>(enchantments.keySet())) {
             int storedLevel = enchantments.getLevel(enchantment);
-            if (storedLevel <= 0) {
-                continue;
-            }
             if (event.getTargetEnchant() != null && !event.getTargetEnchant().equals(enchantment)) {
                 continue;
             }
-            enchantments.set(enchantment, enchantment.value().getMaxLevel());
+            if (storedLevel>enchantment.value().getMaxLevel() || Config.REMOVELVL.get()) {
+                enchantments.set(enchantment, enchantment.value().getMaxLevel());
+            }
         }
     }
 }

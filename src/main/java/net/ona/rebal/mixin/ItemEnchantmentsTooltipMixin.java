@@ -3,6 +3,7 @@ package net.ona.rebal.mixin;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.ona.rebal.Config;
 import net.ona.rebal.util.EnchantmentLevelRules;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +19,7 @@ public abstract class ItemEnchantmentsTooltipMixin {
         Holder<Enchantment> enchantment = args.get(0);
         int storedLevel = args.get(1);
         int effectiveLevel = EnchantmentLevelRules.getEffectiveLevel(enchantment, storedLevel);
-        if (storedLevel>effectiveLevel) {
+        if (storedLevel>effectiveLevel|| Config.REMOVELVL.get()) {
             args.set(1, effectiveLevel);
         }
     }
